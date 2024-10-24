@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "414803736102",
+    "project_id": "heart-rate-monitoring-app1",
+    "storage_bucket": "heart-rate-monitoring-app1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:414803736102:android:3f98af9f3aab66244f58e7",
+        "android_client_info": {
+          "package_name": "com.example.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDfmnv_mLLDlv_nHp6bvaMKBew1Fm5fM44"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:414803736102:android:7409e79e5aae4ae74f58e7",
+        "android_client_info": {
+          "package_name": "com.example.heart_rate_monitor_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDfmnv_mLLDlv_nHp6bvaMKBew1Fm5fM44"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
