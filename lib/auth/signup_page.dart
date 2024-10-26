@@ -82,39 +82,39 @@ class _SignUpPageState extends State<SignUpPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Image.asset('assets/logo.png', width: 120, height: 120),
-                  const SizedBox(height: 30),
-                  const Text(
+                  SizedBox(height: 30),
+                  Text(
                     'Create an Account',
                     style: TextStyle(
                         fontSize: 28,
                         fontWeight: FontWeight.bold,
                         color: Colors.white),
                   ),
-                  const SizedBox(height: 10),
-                  const Text(
+                  SizedBox(height: 10),
+                  Text(
                     'Join us and improve your heart health',
                     style: TextStyle(fontSize: 16, color: Colors.white70),
                   ),
-                  const SizedBox(height: 30),
+                  SizedBox(height: 30),
 
                   // Email Input Field
                   TextField(
                     controller: _emailController,
                     decoration: InputDecoration(
                       labelText: 'Email',
-                      labelStyle: const TextStyle(color: Colors.white),
+                      labelStyle: TextStyle(color: Colors.white),
                       filled: true,
                       fillColor: Colors.white.withOpacity(0.2),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(30),
                         borderSide: BorderSide.none,
                       ),
-                      prefixIcon: const Icon(Icons.email, color: Colors.white),
+                      prefixIcon: Icon(Icons.email, color: Colors.white),
                     ),
-                    style: const TextStyle(color: Colors.white),
+                    style: TextStyle(color: Colors.white),
                     keyboardType: TextInputType.emailAddress,
                   ),
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16),
 
                   // Password Input Field with visibility toggle
                   TextField(
@@ -122,14 +122,14 @@ class _SignUpPageState extends State<SignUpPage> {
                     obscureText: _obscurePassword,
                     decoration: InputDecoration(
                       labelText: 'Password',
-                      labelStyle: const TextStyle(color: Colors.white),
+                      labelStyle: TextStyle(color: Colors.white),
                       filled: true,
                       fillColor: Colors.white.withOpacity(0.2),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(30),
                         borderSide: BorderSide.none,
                       ),
-                      prefixIcon: const Icon(Icons.lock, color: Colors.white),
+                      prefixIcon: Icon(Icons.lock, color: Colors.white),
                       suffixIcon: IconButton(
                         icon: Icon(
                           _obscurePassword
@@ -144,47 +144,29 @@ class _SignUpPageState extends State<SignUpPage> {
                         },
                       ),
                     ),
-                    style: const TextStyle(color: Colors.white),
+                    style: TextStyle(color: Colors.white),
                   ),
-                  const SizedBox(height: 30),
+                  SizedBox(height: 30),
 
                   // Name Input Field
                   TextField(
                     controller: _nameController,
                     decoration: InputDecoration(
                       labelText: 'Name',
-                      labelStyle: const TextStyle(color: Colors.white),
+                      labelStyle: TextStyle(color: Colors.white),
                       filled: true,
                       fillColor: Colors.white.withOpacity(0.2),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(30),
                         borderSide: BorderSide.none,
                       ),
-                      prefixIcon: const Icon(Icons.person, color: Colors.white),
+                      prefixIcon: Icon(Icons.person, color: Colors.white),
                     ),
-                    style: const TextStyle(color: Colors.white),
+                    style: TextStyle(color: Colors.white),
                   ),
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16),
 
                   // Age Input Field
-                  TextField(
-                    controller: _ageController,
-                    decoration: InputDecoration(
-                      labelText: 'Age',
-                      labelStyle: const TextStyle(color: Colors.white),
-                      filled: true,
-                      fillColor: Colors.white.withOpacity(0.2),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30),
-                        borderSide: BorderSide.none,
-                      ),
-                      prefixIcon:
-                          const Icon(Icons.calendar_today, color: Colors.white),
-                    ),
-                    style: const TextStyle(color: Colors.white),
-                    keyboardType: TextInputType.number,
-                  ),
-                  const SizedBox(height: 16),
 
                   // Gender Dropdown
                   DropdownButtonFormField<String>(
@@ -200,7 +182,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     },
                     decoration: InputDecoration(
                       labelText: 'Gender',
-                      labelStyle: const TextStyle(color: Colors.white),
+                      labelStyle: TextStyle(color: Colors.white),
                       filled: true,
                       fillColor: Colors.white.withOpacity(0.2),
                       border: OutlineInputBorder(
@@ -210,7 +192,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     ),
                     dropdownColor: Colors.redAccent,
                   ),
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16),
 
                   // Date of Birth Picker
                   TextButton(
@@ -231,34 +213,34 @@ class _SignUpPageState extends State<SignUpPage> {
                       _dateOfBirth == null
                           ? 'Select Date of Birth'
                           : 'DOB: ${_dateOfBirth!.toLocal()}'.split(' ')[0],
-                      style: const TextStyle(color: Colors.white),
+                      style: TextStyle(color: Colors.white),
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  SizedBox(height: 20),
 
                   // Sign Up Button
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: registerUser,
+                      child: Text('Sign Up', style: TextStyle(fontSize: 18)),
                       style: ElevatedButton.styleFrom(
                         foregroundColor: Colors.redAccent,
                         backgroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        padding: EdgeInsets.symmetric(vertical: 16),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30),
                         ),
                       ),
-                      child: Text('Sign Up', style: TextStyle(fontSize: 18)),
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  SizedBox(height: 20),
 
                   // Login Button
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text(
+                      Text(
                         'Already have an account? ',
                         style: TextStyle(color: Colors.white, fontSize: 18),
                       ),
@@ -270,7 +252,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                   builder: (context) =>
                                       LoginPage(showRegisterPage: () {})));
                         },
-                        child: const Text(
+                        child: Text(
                           'Login now',
                           style: TextStyle(
                             color: Colors.white,
