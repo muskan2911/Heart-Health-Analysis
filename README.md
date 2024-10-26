@@ -32,7 +32,7 @@ The **Heart Health Analysis** app is a mobile application designed for real-time
 
 1. Clone the repository:
     ```bash
-    git clone https://github.com/yourusername/heart-health-analysis.git
+    git clone https://github.com/muskan2911/heart-health-analysis.git
     cd heart-health-analysis/frontend
     ```
 
