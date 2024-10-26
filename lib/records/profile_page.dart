@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'dart:io';
 
 class UserInfoPage extends StatefulWidget {
   const UserInfoPage({super.key});
@@ -12,9 +15,10 @@ class UserInfoPage extends StatefulWidget {
 
 class _UserInfoPageState extends State<UserInfoPage> {
   final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _ageController = TextEditingController();
   String _gender = 'Male';
   DateTime? _dateOfBirth;
+  File? _selectedImage;
+  String? _profileImageUrl;
 
   @override
   void initState() {
@@ -34,32 +38,74 @@ class _UserInfoPageState extends State<UserInfoPage> {
       if (snapshot.exists) {
         setState(() {
           _nameController.text = snapshot['name'] ?? '';
-          _ageController.text = snapshot['age']?.toString() ?? '';
           _gender = snapshot['gender'] ?? 'Male';
           _dateOfBirth = (snapshot['date_of_birth'] as Timestamp?)?.toDate();
+          _profileImageUrl = snapshot['profile_image_url'];
         });
       }
     }
   }
 
-  void _submitUserInfo() async {
+  Future<void> _pickImage() async {
+    final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _selectedImage = File(pickedFile.path);
+      });
+    }
+  }
+
+  Future<void> _uploadImage() async {
+    if (_selectedImage == null) return;
     try {
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user == null) return;
+
+      final storageRef = FirebaseStorage.instance
+          .ref()
+          .child('profile_images')
+          .child('${user.uid}.jpg');
+
+      await storageRef.putFile(_selectedImage!);
+      _profileImageUrl = await storageRef.getDownloadURL();
+    } catch (e) {
+      print("Image upload error: $e");
+    }
+  }
+
+  int _calculateAge(DateTime birthDate) {
+    DateTime today = DateTime.now();
+    int age = today.year - birthDate.year;
+    if (today.month < birthDate.month ||
+        (today.month == birthDate.month && today.day < birthDate.day)) {
+      age--;
+    }
+    return age;
+  }
+
+  Future<void> _submitUserInfo() async {
+    try {
+      await _uploadImage(); // Upload the image first
       User? user = FirebaseAuth.instance.currentUser;
 
       if (user != null) {
+        int age = _dateOfBirth != null ? _calculateAge(_dateOfBirth!) : 0;
+
         Map<String, dynamic> userData = {
           'name': _nameController.text,
-          'age': int.tryParse(_ageController.text) ?? 0,
+          'age': age,
           'gender': _gender,
           'date_of_birth':
               _dateOfBirth != null ? Timestamp.fromDate(_dateOfBirth!) : null,
+          'profile_image_url': _profileImageUrl,
         };
 
         await FirebaseFirestore.instance
             .collection('users')
             .doc(user.uid)
             .set(userData);
-        Navigator.of(context);
+        Navigator.of(context).pop();
       }
     } catch (e) {
       print("Error: $e");
@@ -80,8 +126,29 @@ class _UserInfoPageState extends State<UserInfoPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Image.asset('assets/logo.png', width: 120, height: 120),
-                const SizedBox(height: 30),
+                // Profile Image Display
+                GestureDetector(
+                  onTap: _pickImage,
+                  child: CircleAvatar(
+                    radius: 60,
+                    backgroundImage: _selectedImage != null
+                        ? FileImage(_selectedImage!)
+                        : _profileImageUrl != null
+                            ? NetworkImage(_profileImageUrl!)
+                            : AssetImage('assets/default_avatar.png')
+                                as ImageProvider,
+                    child: Align(
+                      alignment: Alignment.bottomRight,
+                      child: CircleAvatar(
+                        backgroundColor: Colors.white,
+                        radius: 15,
+                        child: Icon(Icons.camera_alt,
+                            size: 18, color: Colors.redAccent),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
                 // Name Input Field
                 TextField(
                   controller: _nameController,
@@ -95,22 +162,6 @@ class _UserInfoPageState extends State<UserInfoPage> {
                     ),
                     prefixIcon: const Icon(Icons.person),
                   ),
-                ),
-                const SizedBox(height: 16),
-                // Age Input Field
-                TextField(
-                  controller: _ageController,
-                  decoration: InputDecoration(
-                    labelText: 'Age',
-                    filled: true,
-                    fillColor: Colors.white.withOpacity(0.2),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30),
-                      borderSide: BorderSide.none,
-                    ),
-                    prefixIcon: const Icon(Icons.calendar_today),
-                  ),
-                  keyboardType: TextInputType.number,
                 ),
                 const SizedBox(height: 16),
                 // Gender Dropdown
@@ -159,7 +210,7 @@ class _UserInfoPageState extends State<UserInfoPage> {
                         );
                         if (picked != null && picked != _dateOfBirth) {
                           setState(() {
-                            _dateOfBirth = picked; // Set the picked date
+                            _dateOfBirth = picked;
                           });
                         }
                       },
@@ -178,10 +229,7 @@ class _UserInfoPageState extends State<UserInfoPage> {
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: () {
-                      _submitUserInfo();
-                      Navigator.of(context).pop();
-                    },
+                    onPressed: _submitUserInfo,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.redAccent,
                       padding: const EdgeInsets.symmetric(vertical: 16),
